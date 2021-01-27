@@ -72,3 +72,16 @@ headlines['date'] = date.today().strftime("%m/%d/%Y")
 
 #Convert dataframe to csv and append to headlines.csv
 csv = headlines.to_csv('headlines.csv', mode='a')
+
+
+#Add headlines to mysql database
+from sqlalchemy import create_engine
+from sqlalchemy.sql import text
+import json
+
+with open('keys.json', 'r') as keys:
+    key = json.load(keys)['awsKey']
+
+engine = create_engine(key)
+
+headlines.to_sql('headlines', con=engine, if_exists='append')
